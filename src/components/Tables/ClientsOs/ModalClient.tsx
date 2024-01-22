@@ -1,0 +1,263 @@
+import {
+  Modal,
+  ModalContent,
+  ModalCloseButton,
+  ModalHeader,
+  ModalBody,
+  FormLabel,
+  Stack,
+  Button,
+  Icon,
+  useDisclosure,
+  Grid,
+  Checkbox,
+  Flex,
+  Heading,
+  Input,
+  useToast,
+} from "@chakra-ui/react";
+import { RiCheckFill, RiEdit2Fill } from "react-icons/ri";
+import { InfoModal } from "./infoModal";
+import { useMutation } from "@apollo/client";
+import moment from "moment";
+import { useState } from "react";
+import { Client } from "../../../contexts/Typing";
+import { EDIT_CLIENT } from "../../../lib/queries";
+
+export function ModalClient(props: Client) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [editClient] = useMutation(EDIT_CLIENT);
+  const toast = useToast();
+
+  const [values, setValues] = useState({
+    id: props.id,
+    name: props.name,
+    phone: props.phone,
+    serviceOrder: props.serviceOrder,
+    vehicle: props.vehicle,
+    dischargeDate: moment(props.dischargeDate, "DD/MM/YYYY").isValid()
+      ? moment(props.dischargeDate, "DD/MM/YYYY").toISOString()
+      : null,
+    sentToday: props.sentToday,
+    sentThreeDays: props.sentThreeDays,
+    sentSevenDays: props.sentSevenDays,
+    sentOneMonth: props.sentOneMonth,
+    sentThreeMonths: props.sentThreeMonths,
+    sentSixMonths: props.sentSixMonths,
+  });
+
+  const handleInputChange = (name: string, value: string) => {
+    setValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
+
+  const handleEditClient = async () => {
+    try {
+      await editClient({
+        variables: {
+          editClientObject: {
+            ...values,
+          },
+        },
+      });
+
+      toast({
+        title: "Cliente editado com sucesso",
+        position: "top-right",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    } catch (error) {
+      const errorMessage =
+        (error as Error).message || "Ocorreu um erro desconhecido.";
+      toast({
+        title: "Erro ao editar cliente:",
+        description: errorMessage,
+        position: "top-right",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
+  return (
+    <Stack>
+      <Button
+        as="a"
+        size="sm"
+        colorScheme="gray"
+        cursor="pointer"
+        onClick={onOpen}
+      >
+        <Icon as={RiEdit2Fill}></Icon>
+      </Button>
+
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <ModalContent
+          bg="gray.900"
+          borderColor="transparent"
+          boxShadow="2xl"
+          minW="50%"
+          color="gray.50"
+          p="12"
+        >
+          <ModalCloseButton />
+          <ModalHeader>
+            <Heading
+              color="gray.50"
+              textTransform="uppercase"
+              fontSize="20px"
+              fontWeight="bold"
+            >
+              Dados do cliente
+            </Heading>
+          </ModalHeader>
+          <ModalBody>
+            <Grid
+              w="100%"
+              gap="3"
+              fontSize="14px"
+              templateColumns={{ lg: "repeat(2, 1fr)", base: "repeat(1, 1fr" }}
+            >
+              <InfoModal
+                label="Nome Completo"
+                info={props.name}
+                onChange={(value: string) => handleInputChange("name", value)}
+                infoType="text"
+              />
+              <InfoModal
+                label="Contato"
+                info={props.phone}
+                onChange={(value: string) => handleInputChange("phone", value)}
+                infoType="text"
+              />
+              <InfoModal
+                label="Ordem de serviço"
+                info={props.serviceOrder}
+                onChange={(value: string) =>
+                  handleInputChange("serviceOrder", value)
+                }
+                infoType="text"
+              />
+              <InfoModal
+                label="Veículo"
+                info={props.vehicle}
+                onChange={(value: string) =>
+                  handleInputChange("vehicle", value)
+                }
+                infoType="text"
+              />
+              <Flex w="100%" align="center" justify="space-between">
+                <FormLabel
+                  color="gray.400"
+                  fontSize="14px"
+                  textTransform="uppercase"
+                  fontWeight="bold"
+                >
+                  Dada de Inclusão:
+                </FormLabel>
+                <Input
+                  placeholder={moment(props.dischargeDate).format("DD/MM/YYYY")}
+                  borderColor="gray.700"
+                  isReadOnly
+                  type="text"
+                  bg="gray.800"
+                  color="gray.50"
+                  w="50%"
+                  py="1"
+                  px="3"
+                  rounded="5"
+                />
+              </Flex>
+            </Grid>
+            <Grid
+              w="100%"
+              gap="1"
+              templateColumns={{ lg: "repeat(6, 1fr)", base: "repeat(2, 1fr)" }}
+              mt="8"
+              fontSize="14px"
+              fontWeight="500"
+            >
+              <Checkbox
+                colorScheme="green"
+                color={values.sentToday ? "green.300" : ""}
+                isChecked={values.sentToday}
+                onChange={(e) =>
+                  setValues({ ...values, sentToday: e.target.checked })
+                }
+                aria-label="Sent Today"
+              >
+                Hoje
+              </Checkbox>
+              <Checkbox
+                colorScheme="green"
+                color={values.sentThreeDays ? "green.300" : ""}
+                isChecked={values.sentThreeDays}
+                onChange={(e) =>
+                  setValues({ ...values, sentThreeDays: e.target.checked })
+                }
+              >
+                3 dias
+              </Checkbox>
+              <Checkbox
+                colorScheme="green"
+                color={values.sentSevenDays ? "green.300" : ""}
+                isChecked={values.sentSevenDays}
+                onChange={(e) =>
+                  setValues({ ...values, sentSevenDays: e.target.checked })
+                }
+              >
+                7 dias
+              </Checkbox>
+              <Checkbox
+                colorScheme="green"
+                color={values.sentOneMonth ? "green.300" : ""}
+                isChecked={values.sentOneMonth}
+                onChange={(e) =>
+                  setValues({ ...values, sentOneMonth: e.target.checked })
+                }
+              >
+                1 mês
+              </Checkbox>
+              <Checkbox
+                colorScheme="green"
+                color={values.sentThreeMonths ? "green.300" : ""}
+                isChecked={values.sentThreeMonths}
+                onChange={(e) =>
+                  setValues({ ...values, sentThreeMonths: e.target.checked })
+                }
+              >
+                3 meses
+              </Checkbox>
+              <Checkbox
+                colorScheme="green"
+                color={values.sentSixMonths ? "green.300" : ""}
+                isChecked={values.sentSixMonths}
+                onChange={(e) =>
+                  setValues({ ...values, sentSixMonths: e.target.checked })
+                }
+              >
+                6 meses
+              </Checkbox>
+            </Grid>
+
+            <Button
+              colorScheme="green"
+              mt="4"
+              w="100%"
+              size="sm"
+              onClick={handleEditClient}
+            >
+              <Icon as={RiCheckFill} boxSize="1rem" />
+              Confirmar envio
+            </Button>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </Stack>
+  );
+}
