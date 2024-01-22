@@ -27,12 +27,13 @@ export function ModalNewClient() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const formData: Client = {
-      name: event.currentTarget.name.value,
-      phone: event.currentTarget.phone.value,
-      serviceOrder: event.currentTarget.serviceOrder.value,
-      vehicle: event.currentTarget.vehicle.value,
-      dischargeDate: event.currentTarget.dischargeDate.value,
+    const formData = new FormData(event.currentTarget);
+    const clientData: Client = {
+      name: formData.get("name") as string,
+      phone: formData.get("phone") as string,
+      serviceOrder: formData.get("serviceOrder") as string,
+      vehicle: formData.get("vehicle") as string,
+      dischargeDate: formData.get("dischargeDate") as string,
       sentToday: false,
       sentThreeDays: false,
       sentSevenDays: false,
@@ -44,13 +45,13 @@ export function ModalNewClient() {
     try {
       await createClient({
         variables: {
-          createClientObject: formData,
+          createClientObject: clientData,
         },
       });
       window.location.reload();
       toast({
         title: "Cliente criado com sucesso!",
-        description: `Cliente: ${formData.name}`,
+        description: `Cliente: ${clientData.name}`,
         position: "top-right",
         status: "success",
         duration: 3000,
@@ -107,7 +108,7 @@ export function ModalNewClient() {
                     w="100%"
                     gap="4"
                   >
-                    <FormControl id="name" isRequired  >
+                    <FormControl id="name" isRequired>
                       <FormLabel>Cliente:</FormLabel>
                       <Input
                         type="text"
@@ -116,7 +117,7 @@ export function ModalNewClient() {
                         rounded="5"
                         bg="gray.800"
                         borderColor="gray.700"
-                        _hover={{ borderColor:"gray.700" }}
+                        _hover={{ borderColor: "gray.700" }}
                       />
                     </FormControl>
                     <FormControl id="phone" isRequired>
@@ -128,7 +129,7 @@ export function ModalNewClient() {
                         rounded="5"
                         bg="gray.800"
                         borderColor="gray.700"
-                        _hover={{ borderColor:"gray.700" }}
+                        _hover={{ borderColor: "gray.700" }}
                       />
                     </FormControl>
                     <FormControl id="serviceOrder" isRequired>
@@ -140,7 +141,7 @@ export function ModalNewClient() {
                         rounded="5"
                         bg="gray.800"
                         borderColor="gray.700"
-                        _hover={{ borderColor:"gray.700" }}
+                        _hover={{ borderColor: "gray.700" }}
                       />
                     </FormControl>
                     <FormControl id="vehicle" isRequired>
@@ -152,7 +153,7 @@ export function ModalNewClient() {
                         rounded="5"
                         bg="gray.800"
                         borderColor="gray.700"
-                        _hover={{ borderColor:"gray.700" }}
+                        _hover={{ borderColor: "gray.700" }}
                       />
                     </FormControl>
                     <FormControl id="dischargeDate" isRequired>
@@ -163,7 +164,7 @@ export function ModalNewClient() {
                         rounded="5"
                         bg="gray.800"
                         borderColor="gray.700"
-                        _hover={{ borderColor:"gray.700" }}
+                        _hover={{ borderColor: "gray.700" }}
                       />
                     </FormControl>
                   </Grid>

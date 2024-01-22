@@ -25,9 +25,9 @@ import { ModalClient } from "./ModalClient";
 import { RiCloseFill } from "react-icons/ri";
 import { useQuery, useMutation } from "@apollo/client";
 import { Client } from "../../../contexts/Typing";
-import { filterClients } from "../../../contexts/filters";
 import { DELETE_CLIENT, GET_CLIENTS } from "../../../lib/queries";
 import { SentBadge } from "./SentBadge";
+import { filterClients } from "../../../contexts/Filters";
 
 export function ClientsTable({ selectedFilter }: { selectedFilter: string }) {
   const { data, refetch } = useQuery<{ clients: Client[] }>(GET_CLIENTS);
@@ -148,7 +148,14 @@ export function ClientsTable({ selectedFilter }: { selectedFilter: string }) {
                   />
                   <Button
                     size="sm"
-                    onClick={() => handleDeleteConfirmation(client.id)}
+                    onClick={() => {
+                      if (typeof client.id === 'number') {
+                        handleDeleteConfirmation(client.id);
+                      } else {
+                        // Tratar o caso de client.id ser undefined
+                        console.error('Client ID is undefined');
+                      }
+                    }}
                   >
                     <Icon as={RiCloseFill} />
                   </Button>
@@ -175,7 +182,12 @@ export function ClientsTable({ selectedFilter }: { selectedFilter: string }) {
                             ml={3}
                             colorScheme="red"
                             onClick={async () => {
-                              await handleDeleteClient(client.id);
+                              if (typeof client.id === 'number') {
+                                await handleDeleteClient(client.id);
+                              } else {
+                                console.error('Client ID is undefined');
+                                onClose();
+                              }
                             }}
                           >
                             Excluir
