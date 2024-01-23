@@ -27,6 +27,7 @@ import { EDIT_CLIENT } from "../../../lib/queries";
 export function ModalClient(props: Client) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [editClient] = useMutation(EDIT_CLIENT);
+  const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
 
   const [values, setValues] = useState({
@@ -54,6 +55,7 @@ export function ModalClient(props: Client) {
   };
 
   const handleEditClient = async () => {
+    setIsLoading(true)
     try {
       await editClient({
         variables: {
@@ -82,6 +84,7 @@ export function ModalClient(props: Client) {
         isClosable: true,
       });
     }
+    setIsLoading(false)
   };
 
   return (
@@ -250,6 +253,7 @@ export function ModalClient(props: Client) {
               mt="4"
               w="100%"
               size="sm"
+              isLoading={isLoading}
               onClick={handleEditClient}
             >
               <Icon as={RiCheckFill} boxSize="1rem" />

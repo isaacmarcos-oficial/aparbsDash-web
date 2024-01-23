@@ -13,15 +13,18 @@ import {
   Stack,
   useDisclosure,
   useToast,
+  ModalCloseButton,
 } from "@chakra-ui/react";
 import { RiAddLine } from "react-icons/ri";
 import { useMutation } from "@apollo/client";
 import { CREATE_CLIENT } from "../../../lib/queries";
 import { Client } from "../../../contexts/Typing";
+import { useState } from "react";
 
 export function ModalNewClient() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [createClient] = useMutation(CREATE_CLIENT);
+  const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -42,6 +45,7 @@ export function ModalNewClient() {
       sentSixMonths: false,
     };
 
+    setIsLoading(true);
     try {
       await createClient({
         variables: {
@@ -71,6 +75,7 @@ export function ModalNewClient() {
         isClosable: true,
       });
     }
+    setIsLoading(false);
   };
 
   return (
@@ -96,6 +101,7 @@ export function ModalNewClient() {
           color="gray.50"
           p="12"
         >
+          <ModalCloseButton />
           <ModalBody>
             <Stack>
               <form onSubmit={handleSubmit}>
@@ -168,7 +174,7 @@ export function ModalNewClient() {
                       />
                     </FormControl>
                   </Grid>
-                  <Button colorScheme="blue" type="submit">
+                  <Button isLoading={isLoading} colorScheme="green" type="submit">
                     Adicionar Cliente
                   </Button>
                 </Flex>

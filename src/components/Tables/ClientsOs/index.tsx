@@ -34,6 +34,7 @@ export function ClientsTable({ selectedFilter }: { selectedFilter: string }) {
   const cancelRef = useRef<HTMLButtonElement>(null);
   const toast = useToast();
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
   const onClose = () => setIsOpen(false);
 
   const filteredClients = data
@@ -53,6 +54,7 @@ export function ClientsTable({ selectedFilter }: { selectedFilter: string }) {
   };
 
   const handleDeleteClient = async (id: number) => {
+    setIsLoading(true)
     await deleteClient({
       variables: {
         deleteClientId: id.toString(),
@@ -68,6 +70,7 @@ export function ClientsTable({ selectedFilter }: { selectedFilter: string }) {
       duration: 3000,
       isClosable: true,
     });
+    setIsLoading(false)
   };
 
   const sortByDischargeDate = (a: Client, b: Client) => {
@@ -149,7 +152,7 @@ export function ClientsTable({ selectedFilter }: { selectedFilter: string }) {
                   <Button
                     size="sm"
                     onClick={() => {
-                      if (typeof client.id === 'number') {
+                      if (typeof client.id === 'string') {
                         handleDeleteConfirmation(client.id);
                       } else {
                         // Tratar o caso de client.id ser undefined
@@ -181,8 +184,9 @@ export function ClientsTable({ selectedFilter }: { selectedFilter: string }) {
                           <Button
                             ml={3}
                             colorScheme="red"
+                            isLoading={isLoading}
                             onClick={async () => {
-                              if (typeof client.id === 'number') {
+                              if (typeof client.id === 'string') {
                                 await handleDeleteClient(client.id);
                               } else {
                                 console.error('Client ID is undefined');
