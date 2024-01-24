@@ -52,22 +52,24 @@ export function ModalNewClient() {
           createClientObject: clientData,
         },
       });
-      window.location.reload();
+      localStorage.setItem("clientCreated", "true");
       toast({
         title: "Cliente criado com sucesso!",
         description: `Cliente: ${clientData.name}`,
         position: "top-right",
         status: "success",
-        duration: 3000,
+        duration: 1500,
         isClosable: true,
       });
-      onClose();
+      setTimeout(() => {
+        window.location.reload();
+      }, 1800);
     } catch (error) {
       const errorMessage =
         (error as Error).message || "Ocorreu um erro desconhecido.";
 
       toast({
-        title: "Erro ao criar cliente:",
+        title: `Erro ao criar cliente: ${clientData.name}`,
         description: errorMessage,
         position: "top-right",
         status: "error",
@@ -75,7 +77,6 @@ export function ModalNewClient() {
         isClosable: true,
       });
     }
-    setIsLoading(false);
   };
 
   return (
@@ -174,7 +175,11 @@ export function ModalNewClient() {
                       />
                     </FormControl>
                   </Grid>
-                  <Button isLoading={isLoading} colorScheme="green" type="submit">
+                  <Button
+                    isLoading={isLoading}
+                    colorScheme="green"
+                    type="submit"
+                  >
                     Adicionar Cliente
                   </Button>
                 </Flex>

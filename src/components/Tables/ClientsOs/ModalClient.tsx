@@ -19,10 +19,10 @@ import {
 import { RiCheckFill, RiEdit2Fill } from "react-icons/ri";
 import { InfoModal } from "./infoModal";
 import { useMutation } from "@apollo/client";
-import moment from "moment";
 import { useState } from "react";
 import { Client } from "../../../contexts/Typing";
 import { EDIT_CLIENT } from "../../../lib/queries";
+import moment from "moment";
 
 export function ModalClient(props: Client) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -64,9 +64,8 @@ export function ModalClient(props: Client) {
           },
         },
       });
-
       toast({
-        title: "Cliente editado com sucesso",
+        title: `Cliente: ${values.name} editado com sucesso`,
         position: "top-right",
         status: "success",
         duration: 3000,
@@ -76,7 +75,7 @@ export function ModalClient(props: Client) {
       const errorMessage =
         (error as Error).message || "Ocorreu um erro desconhecido.";
       toast({
-        title: "Erro ao editar cliente:",
+        title: `Erro ao editar ${values.name}:`,
         description: errorMessage,
         position: "top-right",
         status: "error",
@@ -164,7 +163,7 @@ export function ModalClient(props: Client) {
                   Dada de Inclusão:
                 </FormLabel>
                 <Input
-                  placeholder={moment(props.dischargeDate).format("DD/MM/YYYY")}
+                  placeholder={props.dischargeDate}
                   borderColor="gray.700"
                   isReadOnly
                   type="text"

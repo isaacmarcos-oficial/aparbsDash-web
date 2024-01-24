@@ -19,8 +19,6 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { RefObject, useRef, useState } from "react";
-import moment from "moment";
-import "moment/locale/pt-br";
 import { ModalClient } from "./ModalClient";
 import { RiCloseFill } from "react-icons/ri";
 import { useQuery, useMutation } from "@apollo/client";
@@ -29,12 +27,37 @@ import { DELETE_CLIENT, GET_CLIENTS } from "../../../lib/queries";
 import { SentBadge } from "./SentBadge";
 import { filterClients } from "../../../contexts/Filters";
 
+import dayjs from "dayjs";
+import relativeTime from 'dayjs/plugin/relativeTime';
+import updateLocale from "dayjs/plugin/updateLocale"
+
+dayjs.extend(relativeTime);
+dayjs.extend(updateLocale);
+
+dayjs.updateLocale('en', {
+  relativeTime: {
+    future: "em %s",
+    past: "%s atrás",
+    s: 'agora',
+    m: "1 minuto",
+    mm: "%d minutos",
+    h: "1 hora",
+    hh: "%d horas",
+    d: "1 dia",
+    dd: "%d dias",
+    M: "1 mês",
+    MM: "%d meses",
+    y: "1 anos",
+    yy: "%d anos"
+  }
+})
+
 export function ClientsTable({ selectedFilter }: { selectedFilter: string }) {
   const { data, refetch } = useQuery<{ clients: Client[] }>(GET_CLIENTS);
   const cancelRef = useRef<HTMLButtonElement>(null);
   const toast = useToast();
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   const onClose = () => setIsOpen(false);
 
   const filteredClients = data
@@ -54,7 +77,7 @@ export function ClientsTable({ selectedFilter }: { selectedFilter: string }) {
   };
 
   const handleDeleteClient = async (id: number) => {
-    setIsLoading(true)
+    setIsLoading(true);
     await deleteClient({
       variables: {
         deleteClientId: id.toString(),
@@ -70,7 +93,7 @@ export function ClientsTable({ selectedFilter }: { selectedFilter: string }) {
       duration: 3000,
       isClosable: true,
     });
-    setIsLoading(false)
+    setIsLoading(false);
   };
 
   const sortByDischargeDate = (a: Client, b: Client) => {
@@ -123,9 +146,7 @@ export function ClientsTable({ selectedFilter }: { selectedFilter: string }) {
               </Td>
               <Td>
                 <Badge colorScheme="green" p="1" w="100%" textAlign="center">
-                  {moment(parseInt(client.dischargeDate))
-                    .locale("pt-br")
-                    .fromNow()}
+                  {dayjs(parseInt(client.dischargeDate)).fromNow(true)}
                 </Badge>
               </Td>
               <Td display={{ base: "none", md: "table-cell" }}>
@@ -139,7 +160,7 @@ export function ClientsTable({ selectedFilter }: { selectedFilter: string }) {
                     phone={client.phone}
                     serviceOrder={client.serviceOrder}
                     vehicle={client.vehicle}
-                    dischargeDate={moment(
+                    dischargeDate={dayjs(
                       parseInt(client.dischargeDate)
                     ).format("DD/MM/YYYY")}
                     sentToday={client.sentToday}
@@ -152,11 +173,11 @@ export function ClientsTable({ selectedFilter }: { selectedFilter: string }) {
                   <Button
                     size="sm"
                     onClick={() => {
-                      if (typeof client.id === 'string') {
+                      if (typeof client.id === "string") {
                         handleDeleteConfirmation(client.id);
                       } else {
                         // Tratar o caso de client.id ser undefined
-                        console.error('Client ID is undefined');
+                        console.error("Client ID is undefined");
                       }
                     }}
                   >
@@ -186,10 +207,10 @@ export function ClientsTable({ selectedFilter }: { selectedFilter: string }) {
                             colorScheme="red"
                             isLoading={isLoading}
                             onClick={async () => {
-                              if (typeof client.id === 'string') {
+                              if (typeof client.id === "string") {
                                 await handleDeleteClient(client.id);
                               } else {
-                                console.error('Client ID is undefined');
+                                console.error("Client ID is undefined");
                                 onClose();
                               }
                             }}
