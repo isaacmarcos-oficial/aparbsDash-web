@@ -72,7 +72,7 @@ function App() {
           </Flex>
         </Flex>
 
-        <TableContainer w="100%">
+        <TableContainer w="100%" h="100%">
           <ClientsTable selectedFilter={selectedFilter} />
         </TableContainer>
 

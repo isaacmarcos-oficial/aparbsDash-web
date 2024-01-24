@@ -2,43 +2,44 @@ import { Client } from "./Typing";
 import dayjs from "dayjs";
 
 export const filterClients = (clients: Client[], filter: string) => {
-  const today = dayjs().subtract(1, "days").startOf("day");
-  const threeDaysAgo = dayjs().subtract(3, "days").startOf("day");
-  const sevenDaysAgo = dayjs().subtract(7, "days").startOf("day");
-  const oneMonthAgo = dayjs().subtract(30, "days").startOf("day");
-  const threeMonthAgo = dayjs().subtract(90, "days").startOf("day");
-  const sixMonthAgo = dayjs().subtract(180, "days").startOf("day");
+  const today = dayjs().format('YYYY-MM-DD');
+  const threeDaysAgo = dayjs().subtract(3, 'days').format('YYYY-MM-DD');
+  const sevenDaysAgo = dayjs().subtract(7, 'days').format('YYYY-MM-DD');
+  const oneMonthAgo = dayjs().subtract(30, 'days').format('YYYY-MM-DD');
+  const threeMonthAgo = dayjs().subtract(90, 'days').format('YYYY-MM-DD');
+  const sixMonthAgo = dayjs().subtract(180, 'days').format('YYYY-MM-DD');
 
   switch (filter) {
     case "hoje":
-      return clients.filter((client) =>
-        dayjs(parseInt(client.dischargeDate)).isAfter(today)
+      return clients.filter(client =>
+        dayjs(parseInt(client.dischargeDate)).format('YYYY-MM-DD') === today
       );
     case "3 dias":
-      return clients.filter((client) =>
-        dayjs(parseInt(client.dischargeDate)).isBefore(today) &&
-          dayjs(parseInt(client.dischargeDate)).isAfter(threeDaysAgo)
+      return clients.filter(client =>
+        dayjs(parseInt(client.dischargeDate)).format('YYYY-MM-DD') >= threeDaysAgo &&
+        dayjs(parseInt(client.dischargeDate)).format('YYYY-MM-DD') < today
       );
     case "7 dias":
-      return clients.filter((client) =>
-        dayjs(parseInt(client.dischargeDate)).isBefore(threeDaysAgo) &&
-        dayjs(parseInt(client.dischargeDate)).isAfter(sevenDaysAgo) 
+      return clients.filter(client =>
+        dayjs(parseInt(client.dischargeDate)).format('YYYY-MM-DD') >= sevenDaysAgo &&
+        dayjs(parseInt(client.dischargeDate)).format('YYYY-MM-DD') < threeDaysAgo
       );
     case "30 dias":
-      return clients.filter((client) =>
-        dayjs(parseInt(client.dischargeDate)).isBefore(sevenDaysAgo) &&
-        dayjs(parseInt(client.dischargeDate)).isAfter(oneMonthAgo)
+      return clients.filter(client =>
+        dayjs(parseInt(client.dischargeDate)).format('YYYY-MM-DD') >= oneMonthAgo &&
+        dayjs(parseInt(client.dischargeDate)).format('YYYY-MM-DD') < sevenDaysAgo
       );
     case "90 dias":
-      return clients.filter((client) =>
-        dayjs(parseInt(client.dischargeDate)).isBefore(oneMonthAgo) &&
-        dayjs(parseInt(client.dischargeDate)).isAfter(threeMonthAgo)
+      return clients.filter(client =>
+        dayjs(parseInt(client.dischargeDate)).format('YYYY-MM-DD') >= threeMonthAgo &&
+        dayjs(parseInt(client.dischargeDate)).format('YYYY-MM-DD') < oneMonthAgo
       );
       case "180 dias":
-        return clients.filter((client) =>
-          dayjs(parseInt(client.dischargeDate)).isBefore(threeMonthAgo) &&
-          dayjs(parseInt(client.dischargeDate)).isAfter(sixMonthAgo)
+        return clients.filter(client =>
+          dayjs(parseInt(client.dischargeDate)).format('YYYY-MM-DD') >= threeMonthAgo &&
+          dayjs(parseInt(client.dischargeDate)).format('YYYY-MM-DD') < sixMonthAgo
         );
+      
     default:
       return clients;
   }

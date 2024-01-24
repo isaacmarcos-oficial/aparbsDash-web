@@ -17,6 +17,7 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   useToast,
+  Spinner,
 } from "@chakra-ui/react";
 import { RefObject, useRef, useState } from "react";
 import { ModalClient } from "./ModalClient";
@@ -28,32 +29,22 @@ import { SentBadge } from "./SentBadge";
 import { filterClients } from "../../../contexts/Filters";
 
 import dayjs from "dayjs";
-import relativeTime from 'dayjs/plugin/relativeTime';
-import updateLocale from "dayjs/plugin/updateLocale"
 
-dayjs.extend(relativeTime);
-dayjs.extend(updateLocale);
+function daysFromNow(date: number) {
+  const now = dayjs();
+  const providedDate = dayjs(date);
+  const differenceInDays = now.diff(providedDate, "day");
 
-dayjs.updateLocale('en', {
-  relativeTime: {
-    future: "em %s",
-    past: "%s atrás",
-    s: 'hoje',
-    m: "hoje",
-    mm: "hoje",
-    h: "hoje",
-    hh: "hoje",
-    d: "ontem",
-    dd: "%d dias",
-    M: "1 mês",
-    MM: "%d meses",
-    y: "1 anos",
-    yy: "%d anos"
-  }
-})
+  if (differenceInDays < 1) return "hoje";
+  if (differenceInDays == 1) return "ontem";
+  return differenceInDays + " dias";
+}
 
 export function ClientsTable({ selectedFilter }: { selectedFilter: string }) {
-  const { data, refetch } = useQuery<{ clients: Client[] }>(GET_CLIENTS);
+  const { data, loading, refetch } = useQuery<{ clients: Client[] }>(
+    GET_CLIENTS
+  );
+
   const cancelRef = useRef<HTMLButtonElement>(null);
   const toast = useToast();
   const [isOpen, setIsOpen] = useState(false);
@@ -104,6 +95,14 @@ export function ClientsTable({ selectedFilter }: { selectedFilter: string }) {
 
   const sortedClients = filteredClients.slice().sort(sortByDischargeDate);
 
+  if (loading) {
+    return (
+      <Flex justify="center" align="center" height="100%">
+        <Spinner />
+      </Flex>
+    );
+  }
+
   return (
     <>
       <Table colorScheme="whiteAlpha" w="100%">
@@ -146,11 +145,9 @@ export function ClientsTable({ selectedFilter }: { selectedFilter: string }) {
               </Td>
               <Td>
                 <Badge colorScheme="green" p="1" w="100%" textAlign="center">
-                  {dayjs(parseInt(client.dischargeDate)).fromNow(true)}
-                  <Text fontSize="11px" >
-                  {dayjs(
-                      parseInt(client.dischargeDate)
-                    ).format("DD/MM")}
+                  {daysFromNow(parseInt(client.dischargeDate))}
+                  <Text fontSize="11px">
+                    {dayjs(parseInt(client.dischargeDate)).format("DD/MM")}
                   </Text>
                 </Badge>
               </Td>
@@ -165,9 +162,9 @@ export function ClientsTable({ selectedFilter }: { selectedFilter: string }) {
                     phone={client.phone}
                     serviceOrder={client.serviceOrder}
                     vehicle={client.vehicle}
-                    dischargeDate={dayjs(
-                      parseInt(client.dischargeDate)
-                    ).format("DD/MM/YYYY")}
+                    dischargeDate={dayjs(parseInt(client.dischargeDate)).format(
+                      "DD/MM/YYYY"
+                    )}
                     sentToday={client.sentToday}
                     sentThreeDays={client.sentThreeDays}
                     sentSevenDays={client.sentSevenDays}
@@ -181,7 +178,6 @@ export function ClientsTable({ selectedFilter }: { selectedFilter: string }) {
                       if (typeof client.id === "string") {
                         handleDeleteConfirmation(client.id);
                       } else {
-                        // Tratar o caso de client.id ser undefined
                         console.error("Client ID is undefined");
                       }
                     }}
