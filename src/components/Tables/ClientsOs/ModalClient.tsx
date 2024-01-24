@@ -143,7 +143,7 @@ export function ModalClient(props: Client) {
                 onChange={(value: string) =>
                   handleInputChange("serviceOrder", value)
                 }
-                infoType="text"
+                infoType="number"
               />
               <InfoModal
                 label="Veículo"

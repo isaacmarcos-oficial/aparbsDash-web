@@ -2,7 +2,7 @@ import { Client } from "./Typing";
 import dayjs from "dayjs";
 
 export const filterClients = (clients: Client[], filter: string) => {
-  const today = dayjs().startOf("day");
+  const today = dayjs().subtract(1, "days").startOf("day");
   const threeDaysAgo = dayjs().subtract(3, "days").startOf("day");
   const sevenDaysAgo = dayjs().subtract(7, "days").startOf("day");
   const oneMonthAgo = dayjs().subtract(30, "days").startOf("day");

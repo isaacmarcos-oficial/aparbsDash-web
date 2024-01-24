@@ -38,12 +38,12 @@ dayjs.updateLocale('en', {
   relativeTime: {
     future: "em %s",
     past: "%s atrás",
-    s: 'agora',
-    m: "1 minuto",
-    mm: "%d minutos",
-    h: "1 hora",
-    hh: "%d horas",
-    d: "1 dia",
+    s: 'hoje',
+    m: "hoje",
+    mm: "hoje",
+    h: "hoje",
+    hh: "hoje",
+    d: "ontem",
     dd: "%d dias",
     M: "1 mês",
     MM: "%d meses",
@@ -147,6 +147,11 @@ export function ClientsTable({ selectedFilter }: { selectedFilter: string }) {
               <Td>
                 <Badge colorScheme="green" p="1" w="100%" textAlign="center">
                   {dayjs(parseInt(client.dischargeDate)).fromNow(true)}
+                  <Text fontSize="11px" >
+                  {dayjs(
+                      parseInt(client.dischargeDate)
+                    ).format("DD/MM")}
+                  </Text>
                 </Badge>
               </Td>
               <Td display={{ base: "none", md: "table-cell" }}>
