@@ -3,7 +3,7 @@ export interface Client {
   name: string;
   phone: string;
   serviceOrder: string;
-  vehicle: string;
+  clientNumber: string;
   dischargeDate: string;
   sentToday: boolean;
   sentThreeDays: boolean;

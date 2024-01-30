@@ -1,9 +1,4 @@
-import {
-  Flex,
-  Heading,
-  Select,
-  TableContainer,
-} from "@chakra-ui/react";
+import { Flex, Heading, Input, Select, TableContainer } from "@chakra-ui/react";
 import Header from "./components/Header";
 import { ClientsTable } from "./components/Tables/ClientsOs";
 import { ModalNewClient } from "./components/Tables/ClientsOs/ModalNewClient";
@@ -21,6 +16,8 @@ const filterOptions = [
 
 function App() {
   const [selectedFilter, setSelectedFilter] = useState("Todos");
+  const [clientNumberFilter, setClientNumberFilter] = useState("");
+  const [clientNameFilter, setClientNameFilter] = useState("");
 
   return (
     <Flex
@@ -48,6 +45,29 @@ function App() {
         <Flex justify="space-between" w="100%" align="center">
           <Heading size="lg">Clientes</Heading>
           <Flex gap="4" align="center">
+            <Input
+              size="sm"
+              colorScheme="blackAlpha"
+              borderColor="gray.500"
+              borderRadius="5"
+              w="120px"
+              placeholder="Nº do Cliente"
+              type="number"
+              value={clientNumberFilter}
+              onChange={(e) => setClientNumberFilter(e.target.value)}
+            />
+            <Input
+              size="sm"
+              colorScheme="blackAlpha"
+              borderColor="gray.500"
+              borderRadius="5"
+              w="120px"
+              placeholder="Nome do Cliente"
+              type="text"
+              value={clientNameFilter}
+              onChange={(e) => setClientNameFilter(e.target.value)}
+            />
+            
             <Select
               size="sm"
               colorScheme="blackAlpha"
@@ -73,7 +93,11 @@ function App() {
         </Flex>
 
         <TableContainer w="100%" h="100%">
-          <ClientsTable selectedFilter={selectedFilter} />
+          <ClientsTable
+            selectedFilter={selectedFilter}
+            clientNumberFilter={clientNumberFilter}
+            clientNameFilter={clientNameFilter}
+          />
         </TableContainer>
 
         <Flex></Flex>

@@ -1,3 +1,5 @@
+import { RefObject, useRef, useState } from "react";
+import { useQuery, useMutation } from "@apollo/client";
 import {
   Flex,
   Table,
@@ -19,16 +21,13 @@ import {
   useToast,
   Spinner,
 } from "@chakra-ui/react";
-import { RefObject, useRef, useState } from "react";
-import { ModalClient } from "./ModalClient";
 import { RiCloseFill } from "react-icons/ri";
-import { useQuery, useMutation } from "@apollo/client";
-import { Client } from "../../../contexts/Typing";
-import { DELETE_CLIENT, GET_CLIENTS } from "../../../lib/queries";
-import { SentBadge } from "./SentBadge";
-import { filterClients } from "../../../contexts/Filters";
-
 import dayjs from "dayjs";
+import { ModalClient } from "./ModalClient";
+import { Client } from "../../../contexts/Typing";
+import { filterClients } from "../../../contexts/Filters";
+import { DELETE_CLIENT, GET_CLIENTS_FILTER } from "../../../lib/queries";
+import { SentBadge } from "./SentBadge";
 
 function daysFromNow(date: number) {
   const now = dayjs();
@@ -40,27 +39,32 @@ function daysFromNow(date: number) {
   return differenceInDays + " dias";
 }
 
-export function ClientsTable({ selectedFilter }: { selectedFilter: string }) {
-  const { data, loading, refetch } = useQuery<{ clients: Client[] }>(
-    GET_CLIENTS
+interface ClientsTableType {
+  selectedFilter: string;
+  clientNumberFilter: string;
+  clientNameFilter: string;
+}
+
+export function ClientsTable({ selectedFilter, clientNumberFilter, clientNameFilter }: ClientsTableType) {
+  const { data, loading, refetch } = useQuery<{ clientsFiltered: Client[] }>(
+    GET_CLIENTS_FILTER,
+    { variables: {clientNumber: clientNumberFilter, clientName: clientNameFilter} }
   );
 
   const cancelRef = useRef<HTMLButtonElement>(null);
   const toast = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
   const onClose = () => setIsOpen(false);
 
-  const filteredClients = data
-    ? filterClients(data.clients, selectedFilter)
-    : [];
+  // const filteredClients = data?.clientsFiltered ?? [];
+  const filteredClients = data ? filterClients(data.clientsFiltered, selectedFilter) : [];
 
   const [deleteClient] = useMutation<
     { deleteClient: string },
     { deleteClientId: string }
   >(DELETE_CLIENT);
-
-  const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
 
   const handleDeleteConfirmation = (clientId: number) => {
     setSelectedClientId(clientId);
@@ -87,14 +91,6 @@ export function ClientsTable({ selectedFilter }: { selectedFilter: string }) {
     setIsLoading(false);
   };
 
-  const sortByDischargeDate = (a: Client, b: Client) => {
-    const dateA = parseInt(a.dischargeDate);
-    const dateB = parseInt(b.dischargeDate);
-    return dateB - dateA;
-  };
-
-  const sortedClients = filteredClients.slice().sort(sortByDischargeDate);
-
   if (loading) {
     return (
       <Flex justify="center" align="center" height="100%">
@@ -103,13 +99,22 @@ export function ClientsTable({ selectedFilter }: { selectedFilter: string }) {
     );
   }
 
+  const sortByDischargeDate = (a: Client, b: Client) => {
+    const dateA = parseInt(a.dischargeDate);
+    const dateB = parseInt(b.dischargeDate);
+    return dateB - dateA;
+  };
+
+  // console.log(filteredClients)
+  // const sortedClients = filteredClients.slice().sort(sortByDischargeDate);
+  const sortedClients = filteredClients ? filteredClients.slice().sort(sortByDischargeDate) : [];
+
   return (
     <>
       <Table colorScheme="whiteAlpha" w="100%">
         <Thead w="100%">
           <Tr color="blue.500">
             <Th>Cliente</Th>
-            <Th display={{ base: "none", md: "table-cell" }}>Veículo</Th>
             <Th display={{ base: "none", md: "table-cell" }}>OS</Th>
             <Th>Data da baixa</Th>
             <Th display={{ base: "none", md: "table-cell" }}>Contato</Th>
@@ -126,8 +131,11 @@ export function ClientsTable({ selectedFilter }: { selectedFilter: string }) {
                 overflow="clip"
               >
                 <Flex direction="column" gap="2">
-                  <Text fontWeight="bold">{client.name}</Text>
-                  <Flex gap="2">
+                  <Flex gap="2" fontWeight="bold" color="gray.50">
+                    <Badge colorScheme="linkedin">{client.clientNumber}</Badge>
+                    <Text>{client.name}</Text>
+                  </Flex>
+                  <Flex gap="2" w="100%">
                     <SentBadge badgeValue={client.sentToday} />
                     <SentBadge badgeValue={client.sentThreeDays} />
                     <SentBadge badgeValue={client.sentSevenDays} />
@@ -137,14 +145,12 @@ export function ClientsTable({ selectedFilter }: { selectedFilter: string }) {
                   </Flex>
                 </Flex>
               </Td>
-              <Td display={{ base: "none", md: "table-cell" }}>
-                {client.vehicle}
-              </Td>
+
               <Td display={{ base: "none", md: "table-cell" }}>
                 {client.serviceOrder}
               </Td>
               <Td>
-                <Badge colorScheme="green" p="1" w="100%" textAlign="center">
+                <Badge colorScheme="green" p="1" w="50%" textAlign="center">
                   {daysFromNow(parseInt(client.dischargeDate))}
                   <Text fontSize="11px">
                     {dayjs(parseInt(client.dischargeDate)).format("DD/MM")}
@@ -161,7 +167,7 @@ export function ClientsTable({ selectedFilter }: { selectedFilter: string }) {
                     name={client.name}
                     phone={client.phone}
                     serviceOrder={client.serviceOrder}
-                    vehicle={client.vehicle}
+                    clientNumber={client.clientNumber}
                     dischargeDate={dayjs(parseInt(client.dischargeDate)).format(
                       "DD/MM/YYYY"
                     )}

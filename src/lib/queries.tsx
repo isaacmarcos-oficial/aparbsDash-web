@@ -7,7 +7,7 @@ export const GET_CLIENTS = gql`
       name
       phone
       serviceOrder
-      vehicle
+      clientNumber
       dischargeDate
       sentToday
       sentThreeDays
@@ -19,6 +19,32 @@ export const GET_CLIENTS = gql`
   }
 `;
 
+export const GET_CLIENTS_FILTER = gql`
+  query ($clientName: String, $clientNumber: String) {
+    clientsFiltered(clientName: $clientName, clientNumber: $clientNumber) {
+      id
+      name
+      phone
+      serviceOrder
+      clientNumber
+      dischargeDate
+      sentToday
+      sentThreeDays
+      sentSevenDays
+      sentOneMonth
+      sentThreeMonths
+      sentSixMonths
+    }
+  }
+`;
+export const GET_ALL_CLIENT_NUMBERS = gql`
+  query GetAllClientNumbers {
+    clients {
+      clientNumber
+    }
+  }
+`;
+
 export const CREATE_CLIENT = gql`
   mutation CreateClient($createClientObject: CreateClientInput!) {
     createClient(createClientObject: $createClientObject) {
@@ -26,7 +52,7 @@ export const CREATE_CLIENT = gql`
       name
       phone
       serviceOrder
-      vehicle
+      clientNumber
       dischargeDate
       sentToday
       sentThreeDays
@@ -45,7 +71,7 @@ export const EDIT_CLIENT = gql`
       name
       phone
       serviceOrder
-      vehicle
+      clientNumber
       dischargeDate
       sentToday
       sentThreeDays

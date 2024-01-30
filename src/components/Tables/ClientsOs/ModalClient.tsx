@@ -35,7 +35,7 @@ export function ModalClient(props: Client) {
     name: props.name,
     phone: props.phone,
     serviceOrder: props.serviceOrder,
-    vehicle: props.vehicle,
+    clientNumber: props.clientNumber,
     dischargeDate: moment(props.dischargeDate, "DD/MM/YYYY").isValid()
       ? moment(props.dischargeDate, "DD/MM/YYYY").toISOString()
       : null,
@@ -147,9 +147,9 @@ export function ModalClient(props: Client) {
               />
               <InfoModal
                 label="Veículo"
-                info={props.vehicle}
+                info={props.clientNumber}
                 onChange={(value: string) =>
-                  handleInputChange("vehicle", value)
+                  handleInputChange("clientNumber", value)
                 }
                 infoType="text"
               />

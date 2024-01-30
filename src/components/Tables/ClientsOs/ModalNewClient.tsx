@@ -35,7 +35,7 @@ export function ModalNewClient() {
       name: formData.get("name") as string,
       phone: formData.get("phone") as string,
       serviceOrder: formData.get("serviceOrder") as string,
-      vehicle: formData.get("vehicle") as string,
+      clientNumber: formData.get("clientNumber") as string,
       dischargeDate: formData.get("dischargeDate") as string,
       sentToday: false,
       sentThreeDays: false,
@@ -77,6 +77,7 @@ export function ModalNewClient() {
         isClosable: true,
       });
     }
+    setIsLoading(false)
   };
 
   return (
@@ -115,6 +116,18 @@ export function ModalNewClient() {
                     w="100%"
                     gap="4"
                   >
+                    <FormControl id="clientNumber" isRequired>
+                      <FormLabel>Número do cliente:</FormLabel>
+                      <Input
+                        type="number"
+                        name="clientNumber"
+                        placeholder="Digite o número do cliente"
+                        rounded="5"
+                        bg="gray.800"
+                        borderColor="gray.700"
+                        _hover={{ borderColor: "gray.700" }}
+                      />
+                    </FormControl>
                     <FormControl id="name" isRequired>
                       <FormLabel>Cliente:</FormLabel>
                       <Input
@@ -151,18 +164,7 @@ export function ModalNewClient() {
                         _hover={{ borderColor: "gray.700" }}
                       />
                     </FormControl>
-                    <FormControl id="vehicle" isRequired>
-                      <FormLabel>Veículo:</FormLabel>
-                      <Input
-                        type="text"
-                        name="vehicle"
-                        placeholder="Digite o modelo do veículo"
-                        rounded="5"
-                        bg="gray.800"
-                        borderColor="gray.700"
-                        _hover={{ borderColor: "gray.700" }}
-                      />
-                    </FormControl>
+                    
                     <FormControl id="dischargeDate" isRequired>
                       <FormLabel>Data da baixa:</FormLabel>
                       <Input
