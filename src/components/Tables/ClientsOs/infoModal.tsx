@@ -26,7 +26,8 @@ export function InfoModal({ info, initialValue, label, infoType, onChange }: Inf
         type={infoType}
         bg="gray.800"
         color="gray.50"
-        onChange={e => onChange && onChange(e.target.value)}
+        onChange={e => onChange(e.target.value)}
+        // onChange={e => onChange && onChange(e.target.value)}
         w="50%"
         py="1"
         px="3"

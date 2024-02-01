@@ -50,8 +50,6 @@ export function ModalClient(props: Client) {
     sentSixMonths: props.sentSixMonths,
   });
 
-  const [note, setNote] = useState(props.note || "");
-
   const handleInputChange = (name: string, value: string) => {
     setValues((prevValues) => ({
       ...prevValues,
@@ -253,18 +251,19 @@ export function ModalClient(props: Client) {
               </Checkbox>
             </Grid>
 
-              <FormControl id="note" mt="4" >
-                <FormLabel>Observação:</FormLabel>
-                <Textarea
-                  value={note}
-                  onChange={(e) => setNote(e.target.value)}
-                  name="note"
-                  rounded="5"
-                  bg="gray.800"
-                  borderColor="gray.700"
-                  _hover={{ borderColor: "gray.700" }}
-                />
-              </FormControl>
+            <FormControl id="note" mt="4">
+              <FormLabel>Observação:</FormLabel>
+              <Textarea
+                placeholder={props.note}
+                value={values.note}
+                onChange={(e) => handleInputChange("note", e.target.value)}
+                name="note"
+                rounded="5"
+                bg="gray.800"
+                borderColor="gray.700"
+                _hover={{ borderColor: "gray.700" }}
+              />
+            </FormControl>
             <Button
               colorScheme="green"
               mt="4"
