@@ -126,6 +126,14 @@ export function ModalClient(props: Client) {
               templateColumns={{ lg: "repeat(2, 1fr)", base: "repeat(1, 1fr" }}
             >
               <InfoModal
+                label="Número do cliente"
+                info={props.clientNumber}
+                onChange={(value: string) =>
+                  handleInputChange("clientNumber", value)
+                }
+                infoType="text"
+              />
+              <InfoModal
                 label="Nome Completo"
                 info={props.name}
                 onChange={(value: string) => handleInputChange("name", value)}
@@ -145,14 +153,7 @@ export function ModalClient(props: Client) {
                 }
                 infoType="number"
               />
-              <InfoModal
-                label="Veículo"
-                info={props.clientNumber}
-                onChange={(value: string) =>
-                  handleInputChange("clientNumber", value)
-                }
-                infoType="text"
-              />
+              
               <Flex w="100%" align="center" justify="space-between">
                 <FormLabel
                   color="gray.400"
