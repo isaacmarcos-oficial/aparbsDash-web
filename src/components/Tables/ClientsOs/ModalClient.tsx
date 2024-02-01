@@ -181,18 +181,6 @@ export function ModalClient(props: Client) {
                   rounded="5"
                 />
               </Flex>
-              <FormControl id="note">
-                <FormLabel>Observação:</FormLabel>
-                <Textarea
-                  value={note}
-                  onChange={(e) => setNote(e.target.value)}
-                  name="note"
-                  rounded="5"
-                  bg="gray.800"
-                  borderColor="gray.700"
-                  _hover={{ borderColor: "gray.700" }}
-                />
-              </FormControl>
             </Grid>
             <Grid
               w="100%"
@@ -265,6 +253,18 @@ export function ModalClient(props: Client) {
               </Checkbox>
             </Grid>
 
+              <FormControl id="note" mt="4" >
+                <FormLabel>Observação:</FormLabel>
+                <Textarea
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  name="note"
+                  rounded="5"
+                  bg="gray.800"
+                  borderColor="gray.700"
+                  _hover={{ borderColor: "gray.700" }}
+                />
+              </FormControl>
             <Button
               colorScheme="green"
               mt="4"
