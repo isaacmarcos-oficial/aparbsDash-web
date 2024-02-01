@@ -45,10 +45,19 @@ interface ClientsTableType {
   clientNameFilter: string;
 }
 
-export function ClientsTable({ selectedFilter, clientNumberFilter, clientNameFilter }: ClientsTableType) {
+export function ClientsTable({
+  selectedFilter,
+  clientNumberFilter,
+  clientNameFilter,
+}: ClientsTableType) {
   const { data, loading, refetch } = useQuery<{ clientsFiltered: Client[] }>(
     GET_CLIENTS_FILTER,
-    { variables: {clientNumber: clientNumberFilter, clientName: clientNameFilter} }
+    {
+      variables: {
+        clientNumber: clientNumberFilter,
+        clientName: clientNameFilter,
+      },
+    }
   );
 
   const cancelRef = useRef<HTMLButtonElement>(null);
@@ -59,7 +68,9 @@ export function ClientsTable({ selectedFilter, clientNumberFilter, clientNameFil
   const onClose = () => setIsOpen(false);
 
   // const filteredClients = data?.clientsFiltered ?? [];
-  const filteredClients = data ? filterClients(data.clientsFiltered, selectedFilter) : [];
+  const filteredClients = data
+    ? filterClients(data.clientsFiltered, selectedFilter)
+    : [];
 
   const [deleteClient] = useMutation<
     { deleteClient: string },
@@ -105,9 +116,10 @@ export function ClientsTable({ selectedFilter, clientNumberFilter, clientNameFil
     return dateB - dateA;
   };
 
-  // console.log(filteredClients)
   // const sortedClients = filteredClients.slice().sort(sortByDischargeDate);
-  const sortedClients = filteredClients ? filteredClients.slice().sort(sortByDischargeDate) : [];
+  const sortedClients = filteredClients
+    ? filteredClients.slice().sort(sortByDischargeDate)
+    : [];
 
   return (
     <>
@@ -171,6 +183,7 @@ export function ClientsTable({ selectedFilter, clientNumberFilter, clientNameFil
                     dischargeDate={dayjs(parseInt(client.dischargeDate)).format(
                       "DD/MM/YYYY"
                     )}
+                    note={client.note}
                     sentToday={client.sentToday}
                     sentThreeDays={client.sentThreeDays}
                     sentSevenDays={client.sentSevenDays}

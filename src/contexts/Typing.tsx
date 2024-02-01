@@ -5,6 +5,7 @@ export interface Client {
   serviceOrder: string;
   clientNumber: string;
   dischargeDate: string;
+  note?: string
   sentToday: boolean;
   sentThreeDays: boolean;
   sentSevenDays: boolean;

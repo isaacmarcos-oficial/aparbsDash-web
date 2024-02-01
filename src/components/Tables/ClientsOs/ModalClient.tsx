@@ -15,6 +15,8 @@ import {
   Heading,
   Input,
   useToast,
+  FormControl,
+  Textarea,
 } from "@chakra-ui/react";
 import { RiCheckFill, RiEdit2Fill } from "react-icons/ri";
 import { InfoModal } from "./infoModal";
@@ -26,8 +28,8 @@ import moment from "moment";
 
 export function ModalClient(props: Client) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [editClient] = useMutation(EDIT_CLIENT);
   const [isLoading, setIsLoading] = useState(false);
+  const [editClient] = useMutation(EDIT_CLIENT);
   const toast = useToast();
 
   const [values, setValues] = useState({
@@ -39,6 +41,7 @@ export function ModalClient(props: Client) {
     dischargeDate: moment(props.dischargeDate, "DD/MM/YYYY").isValid()
       ? moment(props.dischargeDate, "DD/MM/YYYY").toISOString()
       : null,
+    note: props.note,
     sentToday: props.sentToday,
     sentThreeDays: props.sentThreeDays,
     sentSevenDays: props.sentSevenDays,
@@ -46,6 +49,8 @@ export function ModalClient(props: Client) {
     sentThreeMonths: props.sentThreeMonths,
     sentSixMonths: props.sentSixMonths,
   });
+
+  const [note, setNote] = useState(props.note || "");
 
   const handleInputChange = (name: string, value: string) => {
     setValues((prevValues) => ({
@@ -55,7 +60,7 @@ export function ModalClient(props: Client) {
   };
 
   const handleEditClient = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
       await editClient({
         variables: {
@@ -83,7 +88,7 @@ export function ModalClient(props: Client) {
         isClosable: true,
       });
     }
-    setIsLoading(false)
+    setIsLoading(false);
   };
 
   return (
@@ -153,7 +158,7 @@ export function ModalClient(props: Client) {
                 }
                 infoType="number"
               />
-              
+
               <Flex w="100%" align="center" justify="space-between">
                 <FormLabel
                   color="gray.400"
@@ -176,6 +181,18 @@ export function ModalClient(props: Client) {
                   rounded="5"
                 />
               </Flex>
+              <FormControl id="note">
+                <FormLabel>Observação:</FormLabel>
+                <Textarea
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  name="note"
+                  rounded="5"
+                  bg="gray.800"
+                  borderColor="gray.700"
+                  _hover={{ borderColor: "gray.700" }}
+                />
+              </FormControl>
             </Grid>
             <Grid
               w="100%"

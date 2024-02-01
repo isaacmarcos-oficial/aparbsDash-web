@@ -28,6 +28,7 @@ export const GET_CLIENTS_FILTER = gql`
       serviceOrder
       clientNumber
       dischargeDate
+      note
       sentToday
       sentThreeDays
       sentSevenDays
@@ -54,6 +55,7 @@ export const CREATE_CLIENT = gql`
       serviceOrder
       clientNumber
       dischargeDate
+      note
       sentToday
       sentThreeDays
       sentSevenDays
@@ -73,6 +75,7 @@ export const EDIT_CLIENT = gql`
       serviceOrder
       clientNumber
       dischargeDate
+      note
       sentToday
       sentThreeDays
       sentSevenDays

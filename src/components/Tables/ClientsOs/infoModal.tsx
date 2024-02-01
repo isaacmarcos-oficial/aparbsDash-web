@@ -1,13 +1,14 @@
 import { Flex, FormLabel, Input, } from "@chakra-ui/react";
 
 interface InfoModalProps {
+  initialValue?: string
   label: string;
-  info: string
+  info?: string
   infoType: string;
   onChange: (value: string) => void;
 }
 
-export function InfoModal({ info, label, infoType, onChange }: InfoModalProps) {
+export function InfoModal({ info, initialValue, label, infoType, onChange }: InfoModalProps) {
   return (
     <Flex align="center" w="100%" justify="space-between">
       <FormLabel
@@ -19,6 +20,7 @@ export function InfoModal({ info, label, infoType, onChange }: InfoModalProps) {
         {label}:
       </FormLabel>
       <Input
+        value={initialValue}
         placeholder={info}
         borderColor="gray.700"
         type={infoType}

@@ -14,6 +14,7 @@ import {
   useDisclosure,
   useToast,
   ModalCloseButton,
+  Textarea,
 } from "@chakra-ui/react";
 import { RiAddLine } from "react-icons/ri";
 import { useMutation } from "@apollo/client";
@@ -37,6 +38,7 @@ export function ModalNewClient() {
       serviceOrder: formData.get("serviceOrder") as string,
       clientNumber: formData.get("clientNumber") as string,
       dischargeDate: formData.get("dischargeDate") as string,
+      note: formData.get("note") as string,
       sentToday: false,
       sentThreeDays: false,
       sentSevenDays: false,
@@ -143,7 +145,7 @@ export function ModalNewClient() {
                     <FormControl id="phone" isRequired>
                       <FormLabel>Contato:</FormLabel>
                       <Input
-                        type="tel"
+                        type="number"
                         name="phone"
                         placeholder="Digite o de telefone"
                         rounded="5"
@@ -170,6 +172,16 @@ export function ModalNewClient() {
                       <Input
                         type="datetime-local"
                         name="dischargeDate"
+                        rounded="5"
+                        bg="gray.800"
+                        borderColor="gray.700"
+                        _hover={{ borderColor: "gray.700" }}
+                      />
+                    </FormControl>
+                    <FormControl id="note">
+                      <FormLabel>Observação:</FormLabel>
+                      <Textarea
+                        name="note"
                         rounded="5"
                         bg="gray.800"
                         borderColor="gray.700"
