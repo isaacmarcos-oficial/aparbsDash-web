@@ -12,32 +12,32 @@ export const filterClients = (clients: Client[], filter: string) => {
   switch (filter) {
     case "hoje":
       return clients.filter(client =>
-        dayjs(parseInt(client.dischargeDate)).format('YYYY-MM-DD') === today
+        dayjs(client.dischargeDate).format('YYYY-MM-DD') === today
       );
     case "3 dias":
       return clients.filter(client =>
-        dayjs(parseInt(client.dischargeDate)).format('YYYY-MM-DD') >= threeDaysAgo &&
-        dayjs(parseInt(client.dischargeDate)).format('YYYY-MM-DD') < today
+        dayjs(client.dischargeDate).format('YYYY-MM-DD') >= threeDaysAgo &&
+        dayjs(client.dischargeDate).format('YYYY-MM-DD') < today
       );
     case "7 dias":
       return clients.filter(client =>
-        dayjs(parseInt(client.dischargeDate)).format('YYYY-MM-DD') >= sevenDaysAgo &&
-        dayjs(parseInt(client.dischargeDate)).format('YYYY-MM-DD') < threeDaysAgo
+        dayjs(client.dischargeDate).format('YYYY-MM-DD') >= sevenDaysAgo &&
+        dayjs(client.dischargeDate).format('YYYY-MM-DD') < threeDaysAgo
       );
     case "30 dias":
       return clients.filter(client =>
-        dayjs(parseInt(client.dischargeDate)).format('YYYY-MM-DD') >= oneMonthAgo &&
-        dayjs(parseInt(client.dischargeDate)).format('YYYY-MM-DD') < sevenDaysAgo
+        dayjs(client.dischargeDate).format('YYYY-MM-DD') >= oneMonthAgo &&
+        dayjs(client.dischargeDate).format('YYYY-MM-DD') < sevenDaysAgo
       );
     case "90 dias":
       return clients.filter(client =>
-        dayjs(parseInt(client.dischargeDate)).format('YYYY-MM-DD') >= threeMonthAgo &&
-        dayjs(parseInt(client.dischargeDate)).format('YYYY-MM-DD') < oneMonthAgo
+        dayjs(client.dischargeDate).format('YYYY-MM-DD') >= threeMonthAgo &&
+        dayjs(client.dischargeDate).format('YYYY-MM-DD') < oneMonthAgo
       );
       case "180 dias":
         return clients.filter(client =>
-          dayjs(parseInt(client.dischargeDate)).format('YYYY-MM-DD') >= threeMonthAgo &&
-          dayjs(parseInt(client.dischargeDate)).format('YYYY-MM-DD') < sixMonthAgo
+          dayjs(client.dischargeDate).format('YYYY-MM-DD') >= threeMonthAgo &&
+          dayjs(client.dischargeDate).format('YYYY-MM-DD') < sixMonthAgo
         );
       
     default:

@@ -29,7 +29,7 @@ import { filterClients } from "../../../contexts/Filters";
 import { DELETE_CLIENT, GET_CLIENTS_FILTER } from "../../../lib/queries";
 import { SentBadge } from "./SentBadge";
 
-function daysFromNow(date: number) {
+function daysFromNow(date: string) {
   const now = dayjs();
   const providedDate = dayjs(date);
   const differenceInDays = now.diff(providedDate, "day");
@@ -59,6 +59,8 @@ export function ClientsTable({
       },
     }
   );
+
+  console.log(data)
 
   const cancelRef = useRef<HTMLButtonElement>(null);
   const toast = useToast();
@@ -163,9 +165,9 @@ export function ClientsTable({
               </Td>
               <Td>
                 <Badge colorScheme="green" p="1" w="50%" textAlign="center">
-                  {daysFromNow(parseInt(client.dischargeDate))}
+                  {daysFromNow(client.dischargeDate)}
                   <Text fontSize="11px">
-                    {dayjs(parseInt(client.dischargeDate)).format("DD/MM")}
+                    {dayjs(client.dischargeDate).format("DD/MM")}
                   </Text>
                 </Badge>
               </Td>
@@ -180,7 +182,7 @@ export function ClientsTable({
                     phone={client.phone}
                     serviceOrder={client.serviceOrder}
                     clientNumber={client.clientNumber}
-                    dischargeDate={dayjs(parseInt(client.dischargeDate)).format(
+                    dischargeDate={dayjs(client.dischargeDate).format(
                       "DD/MM/YYYY"
                     )}
                     note={client.note}

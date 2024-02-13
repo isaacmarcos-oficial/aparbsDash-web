@@ -170,7 +170,7 @@ export function ModalNewClient() {
                     <FormControl id="dischargeDate" isRequired>
                       <FormLabel>Data da baixa:</FormLabel>
                       <Input
-                        type="datetime-local"
+                        type="date"
                         name="dischargeDate"
                         rounded="5"
                         bg="gray.800"
