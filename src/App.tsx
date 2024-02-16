@@ -7,7 +7,7 @@ import { useState } from "react";
 const filterOptions = [
   { label: "Todos os clientes", value: "Todos" },
   { label: "Hoje", value: "hoje" },
-  { label: "3 dias", value: "3 dias" },
+  // { label: "3 dias", value: "3 dias" },
   { label: "7 dias", value: "7 dias" },
   { label: "30 dias", value: "30 dias" },
   { label: "90 dias", value: "90 dias" },
@@ -44,51 +44,57 @@ function App() {
       >
         <Flex justify="space-between" w="100%" align="center">
           <Heading size="lg">Clientes</Heading>
-          <Flex gap="4" align="center">
-            <Input
-              size="sm"
-              colorScheme="blackAlpha"
-              borderColor="gray.500"
-              borderRadius="5"
-              w="120px"
-              placeholder="Nº do Cliente"
-              type="number"
-              value={clientNumberFilter}
-              onChange={(e) => setClientNumberFilter(e.target.value)}
-            />
-            <Input
-              size="sm"
-              colorScheme="blackAlpha"
-              borderColor="gray.500"
-              borderRadius="5"
-              w="120px"
-              placeholder="Nome do Cliente"
-              type="text"
-              value={clientNameFilter}
-              onChange={(e) => setClientNameFilter(e.target.value)}
-            />
-            
-            <Select
-              size="sm"
-              colorScheme="blackAlpha"
-              borderColor="gray.500"
-              borderRadius="5"
-              w="150px"
-              value={selectedFilter}
-              onChange={(e) => setSelectedFilter(e.target.value)}
-            >
-              {filterOptions.map((option) => (
-                <option
-                  key={option.value}
-                  style={{ background: "#181B23", color: "#D1D2DC" }}
-                  value={option.value}
-                >
-                  {option.label}
-                </option>
-              ))}
-            </Select>
+          <Flex direction={{ base: "column", md: "row" }} gap="4">
+            <Flex gap="2">
+              <Input
+                size="sm"
+                colorScheme="blackAlpha"
+                borderColor="gray.500"
+                borderRadius="5"
+                w="120px"
+                placeholder="Nº do Cliente"
+                type="number"
+                value={clientNumberFilter}
+                onChange={(e) => setClientNumberFilter(e.target.value)}
+              />
 
-            <ModalNewClient />
+              <Input
+                size="sm"
+                colorScheme="blackAlpha"
+                borderColor="gray.500"
+                borderRadius="5"
+                w="120px"
+                placeholder="Nome do Cliente"
+                type="text"
+                value={clientNameFilter}
+                onChange={(e) => setClientNameFilter(e.target.value)}
+              />
+            </Flex>
+
+            <Flex gap="2">
+              <Flex>
+              <Select
+                size="sm"
+                colorScheme="blackAlpha"
+                borderColor="gray.500"
+                borderRadius="5"
+                w="150px"
+                value={selectedFilter}
+                onChange={(e) => setSelectedFilter(e.target.value)}
+              >
+                {filterOptions.map((option) => (
+                  <option
+                    key={option.value}
+                    style={{ background: "#181B23", color: "#D1D2DC" }}
+                    value={option.value}
+                  >
+                    {option.label}
+                  </option>
+                ))}
+              </Select>
+              </Flex>
+              <ModalNewClient />
+            </Flex>
           </Flex>
         </Flex>
 

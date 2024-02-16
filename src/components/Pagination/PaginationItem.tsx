@@ -13,10 +13,10 @@ export function PaginationItem({ isCurrent = false, number, onPageChange }: Pagi
         size='sm'
         fontSize='xs'
         width='4'
-        colorScheme='pink'
+        colorScheme='green'
         disabled
         _disabled={{
-          bg: 'pink.500',
+          bg: 'red.500',
           cursor: 'default'
         }}
       >
@@ -26,12 +26,13 @@ export function PaginationItem({ isCurrent = false, number, onPageChange }: Pagi
   }
   return (
     <Button 
+      color="gray.500"
       size='sm'
       fontSize='xs'
       width='4'
-      bg='gray.700'
+      bg='gray.900'
       _hover={{
-        bg: 'gray.500'
+        bg: 'gray.700', color:"gray.400"
       }}
       onClick={() => onPageChange(number)}
     >

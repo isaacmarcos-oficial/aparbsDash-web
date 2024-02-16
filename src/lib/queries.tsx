@@ -20,7 +20,7 @@ export const GET_CLIENTS = gql`
 `;
 
 export const GET_CLIENTS_FILTER = gql`
-  query ($clientName: String, $clientNumber: String) {
+  query ($clientName: String, $clientNumber: String ) {
     clientsFiltered(clientName: $clientName, clientNumber: $clientNumber) {
       id
       name

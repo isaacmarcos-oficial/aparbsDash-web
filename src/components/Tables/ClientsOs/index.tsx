@@ -1,6 +1,7 @@
 import { RefObject, useRef, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import {
+  Box,
   Flex,
   Table,
   Tbody,
@@ -28,6 +29,7 @@ import { Client } from "../../../contexts/Typing";
 import { filterClients } from "../../../contexts/Filters";
 import { DELETE_CLIENT, GET_CLIENTS_FILTER } from "../../../lib/queries";
 import { SentBadge } from "./SentBadge";
+import { PaginationItem } from "../../Pagination/PaginationItem";
 
 function daysFromNow(date: string) {
   const now = dayjs();
@@ -60,19 +62,35 @@ export function ClientsTable({
     }
   );
 
-  console.log(data)
-
   const cancelRef = useRef<HTMLButtonElement>(null);
   const toast = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const clientsPerPage = 6;
+
   const onClose = () => setIsOpen(false);
 
-  // const filteredClients = data?.clientsFiltered ?? [];
   const filteredClients = data
     ? filterClients(data.clientsFiltered, selectedFilter)
     : [];
+
+  const totalClients = filteredClients.length;
+  const totalPages = Math.ceil(totalClients / clientsPerPage);
+  const pageNumbers = [];
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
+  }
+  const onPageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const firstClientIndex = (currentPage - 1) * clientsPerPage + 1;
+  const lastClientIndex = Math.min(
+    firstClientIndex + clientsPerPage - 1,
+    totalClients
+  );
 
   const [deleteClient] = useMutation<
     { deleteClient: string },
@@ -118,9 +136,15 @@ export function ClientsTable({
     return dateB - dateA;
   };
 
-  // const sortedClients = filteredClients.slice().sort(sortByDischargeDate);
+  const startIndex = (currentPage - 1) * clientsPerPage;
+  const endIndex = startIndex + clientsPerPage;
+
   const sortedClients = filteredClients
     ? filteredClients.slice().sort(sortByDischargeDate)
+    : [];
+
+  const paginatedClients = filteredClients
+    ? sortedClients.slice(startIndex, endIndex)
     : [];
 
   return (
@@ -128,30 +152,29 @@ export function ClientsTable({
       <Table colorScheme="whiteAlpha" w="100%">
         <Thead w="100%">
           <Tr color="blue.500">
-            <Th>Cliente</Th>
+            <Th width={16} >Cliente</Th>
             <Th display={{ base: "none", md: "table-cell" }}>OS</Th>
-            <Th>Data da baixa</Th>
+            <Th width={8} >Data da baixa</Th>
             <Th display={{ base: "none", md: "table-cell" }}>Contato</Th>
-            <Th width={8}></Th>
+            <Th width={6}></Th>
           </Tr>
         </Thead>
 
         <Tbody>
-          {sortedClients.map((client) => (
+          {paginatedClients.map((client) => (
             <Tr key={client.id}>
               <Td
-                maxW={{ base: "20px", md: "initial" }}
+                maxW={{ base: "150px", md: "initial" }}
                 fontSize="14px"
                 overflow="clip"
               >
-                <Flex direction="column" gap="2">
-                  <Flex gap="2" fontWeight="bold" color="gray.50">
-                    <Badge colorScheme="linkedin">{client.clientNumber}</Badge>
+                <Flex direction="column" gap="2" >
+                  <Flex direction={{ base:"column", md:"row" }} gap="2" fontWeight="bold" color="gray.50">
+                    <Badge w={10} colorScheme="linkedin" textAlign="center">{client.clientNumber}</Badge>
                     <Text>{client.name}</Text>
                   </Flex>
-                  <Flex gap="2" w="100%">
+                  <Flex gap="2" maxW="100%">
                     <SentBadge badgeValue={client.sentToday} />
-                    <SentBadge badgeValue={client.sentThreeDays} />
                     <SentBadge badgeValue={client.sentSevenDays} />
                     <SentBadge badgeValue={client.sentOneMonth} />
                     <SentBadge badgeValue={client.sentThreeMonths} />
@@ -163,8 +186,8 @@ export function ClientsTable({
               <Td display={{ base: "none", md: "table-cell" }}>
                 {client.serviceOrder}
               </Td>
-              <Td>
-                <Badge colorScheme="green" p="1" w="50%" textAlign="center">
+              <Td width={8} >
+                <Badge width={20} colorScheme="green" p="1" textAlign="center">
                   {daysFromNow(client.dischargeDate)}
                   <Text fontSize="11px">
                     {dayjs(client.dischargeDate).format("DD/MM")}
@@ -249,6 +272,27 @@ export function ClientsTable({
           ))}
         </Tbody>
       </Table>
+
+      <Flex
+        marginTop="4"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Box>
+          <strong>{Math.min(firstClientIndex, totalClients)}</strong> -{" "}
+          <strong>{lastClientIndex}</strong> de <strong>{totalClients}</strong>
+        </Box>
+        <Flex gap="2">
+          {pageNumbers.map((number) => (
+            <PaginationItem
+              key={number}
+              number={number}
+              isCurrent={number === currentPage}
+              onPageChange={onPageChange}
+            />
+          ))}
+        </Flex>
+      </Flex>
     </>
   );
 }

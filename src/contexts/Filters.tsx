@@ -22,7 +22,7 @@ export const filterClients = (clients: Client[], filter: string) => {
     case "7 dias":
       return clients.filter(client =>
         dayjs(client.dischargeDate).format('YYYY-MM-DD') >= sevenDaysAgo &&
-        dayjs(client.dischargeDate).format('YYYY-MM-DD') < threeDaysAgo
+        dayjs(client.dischargeDate).format('YYYY-MM-DD') < today
       );
     case "30 dias":
       return clients.filter(client =>
