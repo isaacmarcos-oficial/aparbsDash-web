@@ -82,7 +82,7 @@ export function ClientsTable({
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
   }
-  const onPageChange = (pageNumber) => {
+  const onPageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
 
